@@ -44,38 +44,37 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCr_N8c4G3wz41uxUvFH1WW7kbuKGdP2Xk',
-    appId: '1:784903071503:web:bbca698be4da144037007a',
-    messagingSenderId: '784903071503',
-    projectId: 'diesel-air-408507',
-    authDomain: 'diesel-air-408507.firebaseapp.com',
-    storageBucket: 'diesel-air-408507.appspot.com',
-    measurementId: 'G-PRP0W71PZR',
+    apiKey: 'AIzaSyBi5DxJ9OTZLUEFzo83vem8xvZhL62xbtU',
+    appId: '1:208907000783:web:fa611036a0f2e6c54390ba',
+    messagingSenderId: '208907000783',
+    projectId: 'parkingo-de62c',
+    authDomain: 'parkingo-de62c.firebaseapp.com',
+    storageBucket: 'parkingo-de62c.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDypnSl6hE1NywWN180hQK0Rs4Ibejk4DU',
-    appId: '1:784903071503:android:9e1bcb43c580e4ce37007a',
-    messagingSenderId: '784903071503',
-    projectId: 'diesel-air-408507',
-    storageBucket: 'diesel-air-408507.appspot.com',
+    apiKey: 'AIzaSyDwy6-uDhh3yScWc69-9l0XJhLtZWnYWPY',
+    appId: '1:208907000783:android:053a6fcf1ab5fd444390ba',
+    messagingSenderId: '208907000783',
+    projectId: 'parkingo-de62c',
+    storageBucket: 'parkingo-de62c.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBR1po-M0ETWXzpi37wZ92MJYD4W2wLEcc',
-    appId: '1:784903071503:ios:8cb87a0af8114d7937007a',
-    messagingSenderId: '784903071503',
-    projectId: 'diesel-air-408507',
-    storageBucket: 'diesel-air-408507.appspot.com',
+    apiKey: 'AIzaSyASDSrs6vtcS40SanWuy2qiPgTOLWv1QEk',
+    appId: '1:208907000783:ios:289f99eee65a917c4390ba',
+    messagingSenderId: '208907000783',
+    projectId: 'parkingo-de62c',
+    storageBucket: 'parkingo-de62c.appspot.com',
     iosBundleId: 'com.example.parkingo',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBR1po-M0ETWXzpi37wZ92MJYD4W2wLEcc',
-    appId: '1:784903071503:ios:c87850b76957b13637007a',
-    messagingSenderId: '784903071503',
-    projectId: 'diesel-air-408507',
-    storageBucket: 'diesel-air-408507.appspot.com',
+    apiKey: 'AIzaSyASDSrs6vtcS40SanWuy2qiPgTOLWv1QEk',
+    appId: '1:208907000783:ios:c20272bb8e19c02e4390ba',
+    messagingSenderId: '208907000783',
+    projectId: 'parkingo-de62c',
+    storageBucket: 'parkingo-de62c.appspot.com',
     iosBundleId: 'com.example.parkingo.RunnerTests',
   );
 }

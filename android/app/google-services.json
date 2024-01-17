@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "784903071503",
-    "project_id": "diesel-air-408507",
-    "storage_bucket": "diesel-air-408507.appspot.com"
+    "project_number": "208907000783",
+    "project_id": "parkingo-de62c",
+    "storage_bucket": "parkingo-de62c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:784903071503:android:9e1bcb43c580e4ce37007a",
+        "mobilesdk_app_id": "1:208907000783:android:053a6fcf1ab5fd444390ba",
         "android_client_info": {
           "package_name": "com.example.parkingo"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDypnSl6hE1NywWN180hQK0Rs4Ibejk4DU"
+          "current_key": "AIzaSyDwy6-uDhh3yScWc69-9l0XJhLtZWnYWPY"
         }
       ],
       "services": {

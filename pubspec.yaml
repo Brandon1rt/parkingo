@@ -33,7 +33,6 @@ dependencies:
 
   google_maps_flutter: ^2.5.0
   onboarding: ^3.1.0
-  shared_preferences: ^2.2.2
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
 

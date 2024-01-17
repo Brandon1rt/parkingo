@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:parkingo/components/appbar.dart';
 import 'package:parkingo/pages/login-signup.dart';
+import 'package:parkingo/pages/profile_page.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -73,7 +74,7 @@ class _MapPageState extends State<MapPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LoginPage(),
+                      builder: (context) => ProfilePage(),
                     ));
               },
               icon: Icon(Icons.person_2_rounded))

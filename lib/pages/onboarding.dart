@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:parkingo/pages/login-signup.dart';
-import 'package:parkingo/utilities/preferences_util.dart';
 
 class OnBoard extends StatelessWidget {
   const OnBoard({super.key});
@@ -13,9 +12,6 @@ class OnBoard extends StatelessWidget {
         headerBackgroundColor: Colors.white,
         finishButtonText: 'Register',
         onFinish: () => {
-          setBoolValue(
-              false), //uncomment this and import line for showing onboarding screen only once
-
           Navigator.push(
               context,
               MaterialPageRoute(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:parkingo/components/buttons.dart';
 import 'package:parkingo/components/textButton.dart';
 import 'package:parkingo/components/textfield.dart';
@@ -32,30 +31,33 @@ class CreateAccount extends StatelessWidget {
 
               //email text field
               MyTextfield(
-                hintText: "email",
+                labelText: "email",
                 obscureText: false,
                 controller: emailController,
                 normalBorderColor: Colors.black,
                 focusedBorderColor: Colors.amber,
+                keyboardType: TextInputType.emailAddress,
               ),
 
               SizedBox(height: 15),
 
               //password text field
               MyTextfield(
-                hintText: "password",
+                labelText: "password",
                 obscureText: true,
                 controller: passwordController,
                 normalBorderColor: Colors.black,
                 focusedBorderColor: Colors.amber,
+                keyboardType: TextInputType.text,
               ),
               SizedBox(height: 15),
               MyTextfield(
-                hintText: "confirm password",
+                labelText: "confirm password",
                 obscureText: true,
                 controller: passwordController,
                 normalBorderColor: Colors.black,
                 focusedBorderColor: Colors.amber,
+                keyboardType: TextInputType.text,
               ),
 
               SizedBox(
@@ -63,7 +65,12 @@ class CreateAccount extends StatelessWidget {
               ),
               MyButtons(
                 text: "Create Account",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PersonalInfo()),
+                  );
+                },
                 color: Colors.amberAccent.shade400,
               ),
               SizedBox(
@@ -90,6 +97,85 @@ class CreateAccount extends StatelessWidget {
               )
 
               //dont have account?register
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class PersonalInfo extends StatelessWidget {
+  TextEditingController name = TextEditingController();
+  TextEditingController name1 = TextEditingController();
+  TextEditingController name2 = TextEditingController();
+  TextEditingController name4 = TextEditingController();
+  TextEditingController name5 = TextEditingController();
+  PersonalInfo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Personal Information",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              MyTextfield(
+                labelText: "First Name",
+                obscureText: false,
+                controller: name,
+                normalBorderColor: Colors.black12,
+                focusedBorderColor: Colors.amber,
+                keyboardType: TextInputType.text,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              MyTextfield(
+                labelText: "Last Name",
+                obscureText: false,
+                controller: name,
+                normalBorderColor: Colors.black12,
+                focusedBorderColor: Colors.amber,
+                keyboardType: TextInputType.text,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              MyTextfield(
+                labelText: "Contact number",
+                obscureText: false,
+                controller: name,
+                normalBorderColor: Colors.black12,
+                focusedBorderColor: Colors.amber,
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              MyTextfield(
+                labelText: "Place",
+                obscureText: false,
+                controller: name,
+                normalBorderColor: Colors.black12,
+                focusedBorderColor: Colors.amber,
+                keyboardType: TextInputType.text,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              MyButtons(text: "Proceed", onTap: () {}, color: Colors.amber)
             ],
           ),
         ),
