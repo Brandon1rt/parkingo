@@ -79,6 +79,7 @@ class _MapPageState extends State<MapPage> {
               },
               icon: Icon(Icons.person_2_rounded))
         ],
+        automaticallyImplyLeading: false,
       ),
       body: GoogleMap(
         onMapCreated: (GoogleMapController controller) {
@@ -90,13 +91,6 @@ class _MapPageState extends State<MapPage> {
           zoom: 12.0,
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Call the function to filter markers (e.g., hospitals)
-      //     _filterMarkers();
-      //   },
-      //   child: Icon(Icons.filter_list),
-      // ),
     );
   }
 }

@@ -9,23 +9,35 @@ class OnBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: OnBoardingSlider(
-        headerBackgroundColor: Colors.white,
+        controllerColor: Colors.black,
+        headerBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+        pageBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+        addController: true,
+        addButton: true,
+        centerBackground: true,
+        hasFloatingButton: true,
+        hasSkip: true,
+        imageVerticalOffset: 80,
+        indicatorAbove: false,
+        leading: null,
+        middle: null,
+        trailing: null,
         finishButtonText: 'Register',
         onFinish: () => {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => LoginPage(),
               ))
         },
         finishButtonStyle: FinishButtonStyle(
-          backgroundColor: Colors.black,
+          backgroundColor: Color.fromARGB(255, 91, 91, 91),
         ),
         skipTextButton: Text('Skip'),
         background: [
-          Image.asset(''),
-          Image.asset(''),
-          Image.asset(''),
+          Image.asset("assets/images/search.jpg"),
+          Image.asset('assets/images/save.jpg'),
+          Image.asset('assets/images/land.jpg'),
         ],
         totalPage: 3,
         speed: 1.8,

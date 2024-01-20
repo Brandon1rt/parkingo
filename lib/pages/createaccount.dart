@@ -4,12 +4,18 @@ import 'package:parkingo/components/textButton.dart';
 import 'package:parkingo/components/textfield.dart';
 import 'package:parkingo/pages/login-signup.dart';
 
-class CreateAccount extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class CreateAccount extends StatefulWidget {
+  const CreateAccount({super.key});
 
-  CreateAccount({super.key});
+  @override
+  State<CreateAccount> createState() => _CreateAccountState();
+}
 
+class _CreateAccountState extends State<CreateAccount> {
+  final emailController = new TextEditingController();
+  final passwordController = new TextEditingController();
+
+  Future SignUp() async {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
       );
 
       // If sign-in is successful, you might want to navigate to the next screen or perform other actions.
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => MapPage(),
