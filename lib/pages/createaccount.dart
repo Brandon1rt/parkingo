@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:parkingo/components/buttons.dart';
 import 'package:parkingo/components/textButton.dart';
 import 'package:parkingo/components/textfield.dart';
 import 'package:parkingo/pages/login-signup.dart';
+import 'package:parkingo/pages/personal.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -14,8 +17,65 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   final emailController = new TextEditingController();
   final passwordController = new TextEditingController();
+  final confirmpasswordController = new TextEditingController();
 
-  Future SignUp() async {}
+  Future<void> _registerUser(BuildContext context) async {
+    String username = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String confirmPassword = confirmpasswordController.text.trim();
+
+    // Check if passwords match
+    if (password != confirmPassword) {
+      // Show an error message
+      _showErrorDialog(context, 'Passwords do not match');
+      return;
+    }
+
+    try {
+      // Initialize Firebase
+      await Firebase.initializeApp();
+
+      // Create user with email and password
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: username, password: password);
+
+      // User created successfully
+      print('User created: ${userCredential.user!.uid}');
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PersonalInfo(),
+          ));
+    } on FirebaseAuthException catch (e) {
+      // Handle FirebaseAuth exceptions (e.g., weak password, email already in use)
+      _showErrorDialog(context, ' ${e.message}');
+    } catch (e) {
+      // Handle other exceptions
+      _showErrorDialog(context, 'Error: $e');
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +120,7 @@ class _CreateAccountState extends State<CreateAccount> {
               MyTextfield(
                 labelText: "confirm password",
                 obscureText: true,
-                controller: passwordController,
+                controller: confirmpasswordController,
                 normalBorderColor: Colors.black,
                 focusedBorderColor: Colors.amber,
                 keyboardType: TextInputType.text,
@@ -71,12 +131,7 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               MyButtons(
                 text: "Create Account",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PersonalInfo()),
-                  );
-                },
+                onTap: () => _registerUser(context),
                 color: Colors.amberAccent.shade400,
               ),
               SizedBox(
@@ -112,80 +167,4 @@ class _CreateAccountState extends State<CreateAccount> {
 }
 
 // ignore: must_be_immutable
-class PersonalInfo extends StatelessWidget {
-  TextEditingController name = TextEditingController();
-  TextEditingController name1 = TextEditingController();
-  TextEditingController name2 = TextEditingController();
-  TextEditingController name4 = TextEditingController();
-  TextEditingController name5 = TextEditingController();
-  PersonalInfo({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Personal Information",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              MyTextfield(
-                labelText: "First Name",
-                obscureText: false,
-                controller: name,
-                normalBorderColor: Colors.black12,
-                focusedBorderColor: Colors.amber,
-                keyboardType: TextInputType.text,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              MyTextfield(
-                labelText: "Last Name",
-                obscureText: false,
-                controller: name,
-                normalBorderColor: Colors.black12,
-                focusedBorderColor: Colors.amber,
-                keyboardType: TextInputType.text,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              MyTextfield(
-                labelText: "Contact number",
-                obscureText: false,
-                controller: name,
-                normalBorderColor: Colors.black12,
-                focusedBorderColor: Colors.amber,
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              MyTextfield(
-                labelText: "Place",
-                obscureText: false,
-                controller: name,
-                normalBorderColor: Colors.black12,
-                focusedBorderColor: Colors.amber,
-                keyboardType: TextInputType.text,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              MyButtons(text: "Proceed", onTap: () {}, color: Colors.amber)
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
