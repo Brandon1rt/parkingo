@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
@@ -8,8 +10,44 @@ class AddVehicle extends StatefulWidget {
 }
 
 class _AddVehicleState extends State<AddVehicle> {
-  final registrationNumbercontroller = TextEditingController();
+  final registrationNumberController = TextEditingController();
   String? vehicleType;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void _addVehicleDetails() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        String? uid = _auth.currentUser!.email;
+        print("uid:" + uid!);
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+        // Reference to the current user's document in the 'users' collection
+        DocumentReference userDocRef = firestore.collection('users').doc(uid);
+
+        // Update the document with the new vehicle details
+        await userDocRef.update({
+          'vehicle_details': {
+            'registration_number': registrationNumberController.text,
+            'vehicle_type': vehicleType,
+          }
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Vehicle details added successfully')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User not signed in')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add vehicle details: $error')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,67 +68,61 @@ class _AddVehicleState extends State<AddVehicle> {
                   SizedBox(
                     height: 30,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Type ",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        ListTile(
-                          title: Text("Two wheeler"),
-                          leading: Radio(
-                              value: 'Two wheeler',
-                              groupValue: vehicleType,
-                              onChanged: (val) {
-                                setState(() {
-                                  vehicleType = val.toString();
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          title: Text("Three wheeler"),
-                          leading: Radio(
-                              value: 'Three wheeler',
-                              groupValue: vehicleType,
-                              onChanged: (val) {
-                                setState(() {
-                                  vehicleType = val.toString();
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          title: Text("Four wheeler"),
-                          leading: Radio(
-                              value: 'Four wheeler',
-                              groupValue: vehicleType,
-                              onChanged: (val) {
-                                setState(() {
-                                  vehicleType = val.toString();
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          title: Text("others"),
-                          leading: Radio(
-                              value: 'others',
-                              groupValue: vehicleType,
-                              onChanged: (val) {
-                                setState(() {
-                                  vehicleType = val.toString();
-                                });
-                              }),
-                        ),
-                      ],
-                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Type ",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      ListTile(
+                        title: Text("Two wheeler"),
+                        leading: Radio(
+                            value: 'Two wheeler',
+                            groupValue: vehicleType,
+                            onChanged: (val) {
+                              setState(() {
+                                vehicleType = val.toString();
+                              });
+                            }),
+                      ),
+                      ListTile(
+                        title: Text("Three wheeler"),
+                        leading: Radio(
+                            value: 'Three wheeler',
+                            groupValue: vehicleType,
+                            onChanged: (val) {
+                              setState(() {
+                                vehicleType = val.toString();
+                              });
+                            }),
+                      ),
+                      ListTile(
+                        title: Text("Four wheeler"),
+                        leading: Radio(
+                            value: 'Four wheeler',
+                            groupValue: vehicleType,
+                            onChanged: (val) {
+                              setState(() {
+                                vehicleType = val.toString();
+                              });
+                            }),
+                      ),
+                      ListTile(
+                        title: Text("others"),
+                        leading: Radio(
+                            value: 'others',
+                            groupValue: vehicleType,
+                            onChanged: (val) {
+                              setState(() {
+                                vehicleType = val.toString();
+                              });
+                            }),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -102,11 +134,9 @@ class _AddVehicleState extends State<AddVehicle> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   TextField(
-                    controller: registrationNumbercontroller,
+                    controller: registrationNumberController,
                     decoration: InputDecoration(
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 4, horizontal: 12),
@@ -121,6 +151,11 @@ class _AddVehicleState extends State<AddVehicle> {
                         borderSide: BorderSide(color: Colors.amber),
                       ),
                     ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _addVehicleDetails,
+                    child: Text('Add Vehicle Details'),
                   ),
                 ],
               ),
