@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:parkingo/pages/bookSpot.dart';
 import 'package:parkingo/pages/profile_page.dart';
 
-const LatLng currentLocation = LatLng(25.1193, 55.3773);
-
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({Key? key}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -13,6 +13,54 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   late GoogleMapController mapController;
+  CameraPosition _initialCameraPosition = CameraPosition(
+    target: LatLng(0, 0),
+    zoom: 15,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+  }
+
+  Future<void> _getUserLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      _updateCameraPosition(position);
+    } catch (e) {
+      print("Error getting user location: $e");
+    }
+  }
+
+  void _updateCameraPosition(Position position) {
+    setState(() {
+      _initialCameraPosition = CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 20,
+      );
+    });
+  }
+
+  void _goToUserLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      print("current position: " + position.toString());
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 20,
+          ),
+        ),
+      );
+    } catch (e) {
+      print("Error getting user location: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,20 +72,34 @@ class _MapPageState extends State<MapPage> {
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.search)),
           IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: ((context) => ProfilePage())));
-              },
-              icon: Icon(Icons.person_2)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: ((context) => ProfilePage())),
+              );
+            },
+            icon: Icon(Icons.person),
+          ),
         ],
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition:
-            CameraPosition(target: currentLocation, zoom: 10),
-        onMapCreated: (controller) {
-          mapController = controller;
-        },
+      body: Stack(
+        children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: _initialCameraPosition,
+            onMapCreated: (controller) {
+              mapController = controller;
+            },
+          ),
+          Positioned(
+            bottom: 16.0,
+            right: 16.0,
+            child: FloatingActionButton(
+              onPressed: _goToUserLocation,
+              child: Icon(Icons.my_location),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:parkingo/pages/createaccount.dart';
+import 'package:parkingo/pages/main_page.dart';
 import 'package:parkingo/pages/map_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -84,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapPage(),
+            builder: (context) => MainPage(),
           ),
         );
       } else {
@@ -173,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 25,
-                    color: Colors.deepPurple),
+                    color: Colors.amber),
               ),
               SizedBox(
                 height: 15,
@@ -239,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.deepPurple),
+                          MaterialStateProperty.all<Color>(Colors.amber),
                     ),
                     child: Padding(
                       padding:

@@ -115,9 +115,19 @@ class _AddLandState extends State<AddLand> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // Open location picker here
-                  _selectLocation();
+                  Position? selectedPosition = await _selectLocation();
+                  if (selectedPosition != null) {
+                    setState(() {
+                      _selectedLocation = LatLng(selectedPosition.latitude,
+                          selectedPosition.longitude);
+                    });
+                  } else if (selectedPosition == null) {
+                    SnackBar(
+                        content: Text(
+                            "Select a Location by pressing the button SELECT LOCATION"));
+                  }
                 },
                 child: Text(
                   'Select Location',
@@ -156,10 +166,43 @@ class _AddLandState extends State<AddLand> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Handle saving data here.
-                  // You can access parking fees using _vehicleControllers map.
-                  // Also, use _selectedLocation to save the selected location.
+                onPressed: () async {
+                  try {
+                    String? uid = _auth.currentUser!.email;
+
+                    // Ensure the user is authenticated
+                    if (uid != null) {
+                      // Specify the collection reference for the 'lands' collection
+                      CollectionReference landCollection = FirebaseFirestore
+                          .instance
+                          .collection('lands')
+                          .doc('lands@parkingo')
+                          .collection('user_lands_of_${uid}');
+
+                      // Add land details to the user's subcollection
+                      await landCollection.add({
+                        'landownerName': _landownerNameController.text,
+                        'landArea': _landAreaController.text,
+                        'location': GeoPoint(_selectedLocation.latitude,
+                            _selectedLocation.longitude),
+                        'parkingFees': _vehicleControllers
+                            .map((key, value) => MapEntry(key, value.text)),
+                        // Add other data fields here as needed
+                      });
+
+                      // Show success message or navigate to another screen
+                      _landownerNameController.clear();
+                      _landAreaController.clear();
+                      _vehicleControllers.forEach((key, value) {
+                        value.clear();
+                      });
+                    } else {
+                      print('User is not authenticated');
+                    }
+                  } catch (e) {
+                    print("Error saving data: $e");
+                    // Show error message
+                  }
                 },
                 child: Text(
                   'Save',
@@ -174,13 +217,39 @@ class _AddLandState extends State<AddLand> {
   }
 
   // Function to select location
-  Future<void> _selectLocation() async {
+
+  Future<Position?> _selectLocation() async {
     try {
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      print(position);
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled on the device.
+        // Handle this case as needed.
+        return null;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          // Permission has been denied by the user.
+          // Handle this case as needed.
+          return null;
+        }
+      }
+
+      if (permission == LocationPermission.whileInUse ||
+          permission == LocationPermission.always) {
+        // Permission has been granted.
+        // Retrieve the current position.
+        Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        );
+        print(position);
+        return position;
+      }
     } catch (e) {
-      print("Error : $e");
+      print("Error: $e");
     }
+    return null;
   }
 }

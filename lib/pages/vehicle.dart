@@ -16,6 +16,7 @@ class _AddVehicleState extends State<AddVehicle> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _addVehicleDetails() async {
+    int f = 0;
     try {
       User? user = _auth.currentUser;
       if (user != null) {
@@ -24,7 +25,11 @@ class _AddVehicleState extends State<AddVehicle> {
         FirebaseFirestore firestore = FirebaseFirestore.instance;
 
         // Reference to the current user's document in the 'users' collection
-        DocumentReference userDocRef = firestore.collection('users').doc(uid);
+        DocumentReference userDocRef = firestore
+            .collection('users')
+            .doc(uid)
+            .collection("vehicle_collection")
+            .doc("cyZSEwpLQUuM2iLPlRdo");
 
         // Update the document with the new vehicle details
         await userDocRef.update({

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:parkingo/pages/land.dart';
+import 'package:parkingo/pages/login-signup.dart';
 import 'package:parkingo/pages/map_page.dart';
 import 'package:parkingo/pages/vehicle.dart';
 
@@ -107,21 +108,22 @@ class _ProfilePageState extends State<ProfilePage> {
         QuerySnapshot vehicleSnapshot = await FirebaseFirestore.instance
             .collection('users')
             .doc(uid)
-            .collection('vehicle_details')
+            .collection('vehicle_collection')
             .get();
 
         // Check if the subcollection exists and contains documents
         if (vehicleSnapshot.docs.isNotEmpty) {
           print("Inside if statement of vehiclesnapshot in usersnapshot");
           for (DocumentSnapshot document in vehicleSnapshot.docs) {
-            String registrationNumber = document['registration_number'];
+            String registrationNumber = document['Registration_number'];
             print("Registration number: " + registrationNumber);
-            String vehicleType = document['vehicle_type'];
+            String vehicleType = document['Type'];
             print("Vehicle type: " + vehicleType);
 
             // Create a card widget for each vehicle detail
             Widget vehicleCard = Card(
               child: ListTile(
+                isThreeLine: false,
                 title: Text('Registration Number: $registrationNumber'),
                 subtitle: Text('Vehicle Type: $vehicleType'),
               ),
@@ -154,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MapPage(),
+                  builder: (context) => LoginPage(),
                 ),
               );
             },
@@ -179,19 +181,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     return Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CircleAvatar(
                             radius: 70,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 15,
                           ),
                           Text(
                             username,
                             style: TextStyle(fontSize: 24),
                           ),
                           SizedBox(
-                            height: 100,
+                            height: 50,
                           ),
                           SingleChildScrollView(
                             child: Container(
@@ -200,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               child: Padding(
-                                padding: const EdgeInsets.all(50.0),
+                                padding: const EdgeInsets.all(20.0),
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -213,17 +216,56 @@ class _ProfilePageState extends State<ProfilePage> {
                                       children: [
                                         Icon(Icons.phone),
                                         SizedBox(width: 10),
-                                        Text("phone number here")
+                                        FutureBuilder<String>(
+                                          future: extractContactNumber(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                  'Error loading contact number');
+                                            } else {
+                                              String contactNumber =
+                                                  snapshot.data ?? '';
+                                              return Text(
+                                                contactNumber,
+                                                style: TextStyle(fontSize: 20),
+                                              );
+                                            }
+                                          },
+                                        ),
                                       ],
                                     ),
+
+                                    // printContactNumber(),
                                     SizedBox(height: 20),
                                     Row(
                                       children: [
                                         Icon(Icons.email_rounded),
                                         SizedBox(width: 10),
-                                        Text("email id here")
+                                        FutureBuilder<String?>(
+                                          future: extractEmail(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                  'Error loading email ID');
+                                            } else {
+                                              String emailId =
+                                                  snapshot.data ?? '';
+                                              return Text(
+                                                emailId,
+                                                style: TextStyle(fontSize: 20),
+                                              );
+                                            }
+                                          },
+                                        ),
                                       ],
                                     ),
+
                                     SizedBox(height: 20),
                                     IconButton(
                                         style: ButtonStyle(
@@ -259,7 +301,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       },
                                     ),
                                     SizedBox(
-                                      height: 50,
+                                      height: 20,
                                     ),
                                     TextButton(
                                       onPressed: () {
@@ -306,5 +348,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  Future<String?> extractEmail() async {
+    String? email = _auth.currentUser?.email;
+    return email;
   }
 }
