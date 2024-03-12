@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:parkingo/pages/bookSpot.dart';
 import 'package:parkingo/pages/profile_page.dart';
 
 class MapPage extends StatefulWidget {
@@ -65,12 +64,12 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           "P A R K I N G O",
           style: TextStyle(fontWeight: FontWeight.w500),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
           IconButton(
             onPressed: () {
               Navigator.push(

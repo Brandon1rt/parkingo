@@ -16,7 +16,6 @@ class _AddVehicleState extends State<AddVehicle> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _addVehicleDetails() async {
-    int f = 0;
     try {
       User? user = _auth.currentUser;
       if (user != null) {

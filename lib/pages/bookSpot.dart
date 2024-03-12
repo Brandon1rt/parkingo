@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:parkingo/components/textfield.dart';
-import 'package:parkingo/pages/map_page.dart';
 
 class BookParkingPage extends StatefulWidget {
   // final ParkingSpot parkingSpot;

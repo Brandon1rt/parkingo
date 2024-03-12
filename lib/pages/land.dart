@@ -172,30 +172,60 @@ class _AddLandState extends State<AddLand> {
 
                     // Ensure the user is authenticated
                     if (uid != null) {
-                      // Specify the collection reference for the 'lands' collection
-                      CollectionReference landCollection = FirebaseFirestore
-                          .instance
-                          .collection('lands')
-                          .doc('lands@parkingo')
-                          .collection('user_lands_of_${uid}');
+                      // Check if any of the fields are empty
+                      if (_landownerNameController.text.isEmpty ||
+                          _landAreaController.text.isEmpty ||
+                          _selectedLocation.latitude == 0 ||
+                          _selectedLocation.longitude == 0 ||
+                          _vehicleControllers.values
+                              .any((controller) => controller.text.isEmpty)) {
+                        // Show a message popup box indicating that all fields are required
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Missing Information"),
+                              content: Text(
+                                  "Please fill in all fields before saving."),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text("OK"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        // All fields are filled, proceed to save data to Firestore
+                        CollectionReference landCollection =
+                            FirebaseFirestore.instance.collection('lands');
 
-                      // Add land details to the user's subcollection
-                      await landCollection.add({
-                        'landownerName': _landownerNameController.text,
-                        'landArea': _landAreaController.text,
-                        'location': GeoPoint(_selectedLocation.latitude,
-                            _selectedLocation.longitude),
-                        'parkingFees': _vehicleControllers
-                            .map((key, value) => MapEntry(key, value.text)),
-                        // Add other data fields here as needed
-                      });
+                        // Add land details to the 'lands' collection with the specified document ID
 
-                      // Show success message or navigate to another screen
-                      _landownerNameController.clear();
-                      _landAreaController.clear();
-                      _vehicleControllers.forEach((key, value) {
-                        value.clear();
-                      });
+                        // Create the 'user_land' collection and insert values
+                        await landCollection.doc(uid).set({
+                          'landownerName': _landownerNameController.text,
+                          'landArea': _landAreaController.text,
+                          'location': GeoPoint(
+                            _selectedLocation.latitude,
+                            _selectedLocation.longitude,
+                          ),
+                          'parkingFees': _vehicleControllers.map(
+                            (key, value) => MapEntry(key, value.text),
+                          ),
+                          // Add other data fields here as needed
+                        });
+
+                        // Show success message or navigate to another screen
+                        _landownerNameController.clear();
+                        _landAreaController.clear();
+                        _vehicleControllers.forEach((key, value) {
+                          value.clear();
+                        });
+                      }
                     } else {
                       print('User is not authenticated');
                     }

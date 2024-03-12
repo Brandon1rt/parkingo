@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:parkingo/pages/land.dart';
 import 'package:parkingo/pages/login-signup.dart';
-import 'package:parkingo/pages/map_page.dart';
-import 'package:parkingo/pages/vehicle.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -89,57 +87,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     print("Username: " + cno);
     return cno;
-  }
-
-  Future<List<Widget>> getVehicleCards() async {
-    List<Widget> vehicleCards = [];
-
-    try {
-      String? uid = _auth.currentUser!.email;
-      print("uid inside vehicleCards: " + uid!);
-
-      // Access the Firestore instance and retrieve the document snapshot
-      DocumentSnapshot userSnapshot =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-      if (userSnapshot.exists) {
-        print("Inside usersnapshot if statement");
-        // Access the 'vehicle_details' subcollection
-        QuerySnapshot vehicleSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(uid)
-            .collection('vehicle_collection')
-            .get();
-
-        // Check if the subcollection exists and contains documents
-        if (vehicleSnapshot.docs.isNotEmpty) {
-          print("Inside if statement of vehiclesnapshot in usersnapshot");
-          for (DocumentSnapshot document in vehicleSnapshot.docs) {
-            String registrationNumber = document['Registration_number'];
-            print("Registration number: " + registrationNumber);
-            String vehicleType = document['Type'];
-            print("Vehicle type: " + vehicleType);
-
-            // Create a card widget for each vehicle detail
-            Widget vehicleCard = Card(
-              child: ListTile(
-                isThreeLine: false,
-                title: Text('Registration Number: $registrationNumber'),
-                subtitle: Text('Vehicle Type: $vehicleType'),
-              ),
-            );
-
-            vehicleCards.add(vehicleCard);
-          }
-        } else {
-          print("Error is in line 106-110");
-        }
-      }
-    } catch (error) {
-      print('Error fetching vehicle details: $error');
-    }
-
-    return vehicleCards;
   }
 
   @override
@@ -267,42 +214,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
 
                                     SizedBox(height: 20),
-                                    IconButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.white54)),
-                                        color: Color.fromARGB(255, 89, 89, 89),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddVehicle(),
-                                            ),
-                                          );
-                                        },
-                                        icon: Icon(Icons.add)),
+
                                     // Add vehicle details
-                                    FutureBuilder<List<Widget>>(
-                                      future: getVehicleCards(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        } else if (snapshot.hasError) {
-                                          return Text(
-                                              'Error loading vehicle details');
-                                        } else {
-                                          return Column(
-                                            children: snapshot.data!,
-                                          );
-                                        }
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
+
                                     TextButton(
                                       onPressed: () {
                                         Navigator.push(

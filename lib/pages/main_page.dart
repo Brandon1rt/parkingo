@@ -24,8 +24,8 @@ class MainPage extends StatelessWidget {
               return StreamBuilder<DocumentSnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('users')
-                    .doc(user
-                        ?.email) // Use user?.email to handle null user cases
+                    .doc(
+                        user.email) // Use user?.email to handle null user cases
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

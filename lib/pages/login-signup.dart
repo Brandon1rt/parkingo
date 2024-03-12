@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:parkingo/pages/admin.dart';
 import 'package:parkingo/pages/createaccount.dart';
 import 'package:parkingo/pages/main_page.dart';
 import 'package:parkingo/pages/map_page.dart';
@@ -119,6 +120,21 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
+      // Check if the entered credentials are for the admin
+      if (usernameController.text.trim() == 'parkingoadmin@admin.com' &&
+          passwordController.text == 'parkingo123') {
+        // Navigate to the admin page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                AdminPage(), // Replace 'AdminPage' with your admin page widget
+          ),
+        );
+        return;
+      }
+
+      // Attempt normal user authentication
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: usernameController.text,
         password: passwordController.text,
