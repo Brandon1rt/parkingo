@@ -214,7 +214,8 @@ class _AddLandState extends State<AddLand> {
                             _selectedLocation.longitude,
                           ),
                           'parkingFees': _vehicleControllers.map(
-                            (key, value) => MapEntry(key, value.text),
+                            (key, value) =>
+                                MapEntry(key, double.parse(value.text)),
                           ),
                           // Add other data fields here as needed
                         });

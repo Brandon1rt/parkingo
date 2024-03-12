@@ -244,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                         )),
                     child: Text(
                       "Register Now",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16, color: Colors.amber),
                     ),
                   ),
                   ElevatedButton(
@@ -293,7 +293,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               OutlinedButton(
                 onPressed: _handleSignIn,
-                child: Text('Sign In with Google'),
+                child: Text(
+                  'Sign In with Google',
+                  style: TextStyle(color: Colors.amber),
+                ),
               ),
             ],
           ),

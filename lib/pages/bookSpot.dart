@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:parkingo/components/textfield.dart';
 
 class BookParkingPage extends StatefulWidget {
+  final String email;
+
+  const BookParkingPage({Key? key, required this.email}) : super(key: key);
   // final ParkingSpot parkingSpot;
 
   // const BookParkingPage({required this.parkingSpot});
@@ -16,6 +20,50 @@ class _BookParkingPageState extends State<BookParkingPage> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _contactNumberController = TextEditingController();
   String? _selectedVehicleType;
+
+  Map<String, dynamic>? parkingFees;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchParkingFees();
+  }
+
+  Future<void> _fetchParkingFees() async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('lands_accepted')
+          .doc(widget.email)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>?;
+        final parkingFeesMap = data?['parkingFees'] as Map<String, dynamic>?;
+        setState(() {
+          parkingFees = parkingFeesMap;
+        });
+      }
+    } catch (e) {
+      print('Error fetching parking fees: $e');
+    }
+  }
+
+  double _calculateParkingPrice() {
+    if (_startTime == null ||
+        _endTime == null ||
+        _selectedVehicleType == null ||
+        parkingFees == null) {
+      return 0.0;
+    }
+
+    double? fee = parkingFees![_selectedVehicleType!];
+    if (fee == null) {
+      return 0.0; // Return 0 if no fee is found for the selected vehicle type
+    }
+
+    int durationInHours = _endTime!.hour - _startTime!.hour;
+    return fee * durationInHours;
+  }
 
   @override
   void dispose() {
@@ -75,7 +123,7 @@ class _BookParkingPageState extends State<BookParkingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'You are booking ' /*${widget.parkingSpot.placeName}*/,
+                'You are booking: ',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
@@ -211,7 +259,17 @@ class _BookParkingPageState extends State<BookParkingPage> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle booking here
+                    double parkingPrice = _calculateParkingPrice();
+                    if (parkingPrice > 0) {
+                      // Handle booking with calculated parking price
+                      print('Calculated parking price: $parkingPrice');
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please select all required fields'),
+                        ),
+                      );
+                    }
                   },
                   child: Text('Book Now'),
                 ),

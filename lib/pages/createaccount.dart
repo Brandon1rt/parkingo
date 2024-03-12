@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parkingo/components/buttons.dart';
 import 'package:parkingo/pages/map_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -147,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Column(
@@ -158,7 +159,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 25,
-                    color: Colors.deepPurple),
+                    color: Colors.amber),
+              ),
+              SizedBox(
+                height: 20,
               ),
               TextField(
                 keyboardType: TextInputType.text,
@@ -239,32 +243,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                height: 15,
+                height: 35,
               ),
-              ElevatedButton(
-                onPressed: _signUp,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: _loading
-                      ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                          ),
-                        )
-                      : Text(
-                          "Sign Up",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        ),
-                ),
+              MyButtons(
+                onTap: _signUp,
+                color: Colors.amber,
+                text: "Sign Up",
               ),
             ],
           ),
