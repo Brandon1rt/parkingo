@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parkingo/components/textfield.dart';
 
@@ -15,6 +16,7 @@ class BookParkingPage extends StatefulWidget {
 }
 
 class _BookParkingPageState extends State<BookParkingPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   TextEditingController _nameController = TextEditingController();
@@ -100,6 +102,63 @@ class _BookParkingPageState extends State<BookParkingPage> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('End time should be at least 1 hour ahead of start time'),
       ));
+    }
+  }
+
+  Future<void> _saveBookingData() async {
+    try {
+      // Get the current user's email
+      String? userEmail = FirebaseAuth.instance.currentUser?.email;
+
+      if (userEmail != null) {
+        // Create a reference to the "bookings" subcollection in the user's document
+        // Create a new document in the "bookings" subcollection
+        await _firestore
+            .collection('users')
+            .doc(widget.email)
+            .collection('bookings_received')
+            .doc(userEmail)
+            .set({
+          'name': _nameController.text,
+          'contactNumber': _contactNumberController.text,
+          'vehicleType': _selectedVehicleType,
+          'startTime': _startTime?.hour,
+          'endTime': _endTime?.hour,
+        });
+
+        // Reduce the available land area by 1
+        await _firestore.collection('lands_accepted').doc(widget.email).update({
+          'landArea': FieldValue.increment(-1),
+        });
+
+        // Save booking details to booking_done collection
+        await _firestore
+            .collection('users')
+            .doc(userEmail)
+            .collection('booking_done')
+            .add({
+          'vehicleType': _selectedVehicleType,
+          'price': _calculateParkingPrice(),
+          'contactNumber': _contactNumberController.text,
+          'landownerEmail': widget.email,
+        });
+
+        // Show a success message or perform any other actions you need
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Booking successful'),
+          ),
+        );
+
+        // After the booking is successful, pop the current page to go back to the map page
+        Navigator.pop(context);
+      } else {
+        // Handle the case when the user's email is null
+        print('User email is null');
+      }
+    } catch (e) {
+      // Handle any errors that occurred during the booking process
+      print('Error saving booking data: $e');
     }
   }
 
@@ -261,8 +320,7 @@ class _BookParkingPageState extends State<BookParkingPage> {
                   onPressed: () {
                     double parkingPrice = _calculateParkingPrice();
                     if (parkingPrice > 0) {
-                      // Handle booking with calculated parking price
-                      print('Calculated parking price: $parkingPrice');
+                      _saveBookingData(); // Call the method to save the booking data
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

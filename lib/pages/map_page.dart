@@ -101,13 +101,28 @@ class _MapPageState extends State<MapPage> {
                           SizedBox(
                             height: 10,
                           ),
+                          InkWell(
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color.fromARGB(255, 247, 247, 247),
+                              ),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.amber,
+                                size: 50,
+                              ),
+                            ),
+                          ),
                           Text(
                             'Land Owner: $landownerName',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            'Land Area: $landArea',
+                            'Capacity: $landArea',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
@@ -120,16 +135,16 @@ class _MapPageState extends State<MapPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // final userEmail =
-                              // FirebaseAuth.instance.currentUser?.email;
-                              /*if (userEmail != email) {*/
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        BookParkingPage(email: email),
-                                  ));
-                              /*} else {
+                              final userEmail =
+                                  FirebaseAuth.instance.currentUser?.email;
+                              if (userEmail != email) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BookParkingPage(email: email),
+                                    ));
+                              } else {
                                 showModalBottomSheet(
                                   context: context,
                                   builder: (context) {
@@ -165,7 +180,7 @@ class _MapPageState extends State<MapPage> {
                                     );
                                   },
                                 );
-                              }*/
+                              }
                             },
                             child: Text('Book Now'),
                           ),

@@ -6,7 +6,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:parkingo/components/textfield.dart';
 
 class AddLand extends StatefulWidget {
-  const AddLand({Key? key}) : super(key: key);
+  final String username;
+  final String contactNumber;
+  const AddLand({Key? key, required this.username, required this.contactNumber})
+      : super(key: key);
 
   @override
   State<AddLand> createState() => _AddLandState();
@@ -90,6 +93,7 @@ class _AddLandState extends State<AddLand> {
               SizedBox(height: 20),
               TextField(
                 decoration: InputDecoration(
+                  hintText: widget.username,
                   labelText: "Land owner name",
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 4, horizontal: 12),
@@ -109,7 +113,7 @@ class _AddLandState extends State<AddLand> {
                 controller: _landAreaController,
                 focusedBorderColor: Colors.amber,
                 keyboardType: TextInputType.number,
-                labelText: "Land Area(In acres)",
+                labelText: "Parking Spots available",
                 normalBorderColor: Colors.black,
                 obscureText: false,
               ),
@@ -208,7 +212,8 @@ class _AddLandState extends State<AddLand> {
                         // Create the 'user_land' collection and insert values
                         await landCollection.doc(uid).set({
                           'landownerName': _landownerNameController.text,
-                          'landArea': _landAreaController.text,
+                          'landArea': int.parse(_landAreaController.text),
+                          'contact': widget.contactNumber,
                           'location': GeoPoint(
                             _selectedLocation.latitude,
                             _selectedLocation.longitude,

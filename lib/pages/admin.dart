@@ -129,9 +129,16 @@ class _AdminPageState extends State<AdminPage> {
             .doc(landDocumentId)
             .set(landData);
 
+        // Delete the land from the original collection
+        await landsCollection.doc(landDocumentId).delete();
+
         // Implement any additional logic if needed
 
         print('Accepted land: $landDocumentId');
+        // Update UI
+        setState(() {
+          // You can update some UI state here if needed
+        });
       } else {
         print('Land document does not exist');
       }
@@ -140,9 +147,18 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
-  void rejectLand(String landDocumentId) {
-    // Implement the functionality to reject land details
-    // You can update the status of the land in Firestore or perform other actions
-    print('Rejected land: $landDocumentId');
+  void rejectLand(String landDocumentId) async {
+    try {
+      // Delete the land from the original collection
+      await landsCollection.doc(landDocumentId).delete();
+
+      print('Rejected land: $landDocumentId');
+      // Update UI
+      setState(() {
+        // You can update some UI state here if needed
+      });
+    } catch (e) {
+      print('Error rejecting land: $e');
+    }
   }
 }
